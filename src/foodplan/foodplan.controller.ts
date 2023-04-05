@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { Foodplan } from 'src/model/Foodplan';
+import { Foodplan } from './model/Foodplan';
 
 @Controller('foodplan')
 export class FoodplanController {
