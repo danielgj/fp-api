@@ -1,46 +1,28 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { CreateUserDTO } from 'src/dtos/CreateUser.dto';
 import { User } from 'src/model/User';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
 
-    private users: User[] = [
-        {
-            id: 1,
-            name: "Daniel",
-            email: "danielgj@gmail.com",
-            password: "pass1234",           
-            isPro: true
-        },
-        {
-            id: 2,
-            name: "Lucía",
-            email: "lucia.aragon@gmail.com",
-            password: "pass1234",           
-            isPro: false
-        }
-    ];
+    constructor(
+     private userService: UserService
+    ) {}
 
     @Get()
     findAllUsers(): User[] {
-        return this.users;
+        return this.userService.findAllUsers();
     }
 
     @Get(':id')
     findUserById(@Param('id', ParseIntPipe) id: number): User {
-        return this.users.find(user => user.id == id);
+        return this.userService.findUserById(id);
     }
 
     @Post()
     registerUser(@Body() user: CreateUserDTO): User {
-        const newUser: User = {
-            id: this.users.length,
-            isPro: false,
-            ...user
-        };
-        this.users.push(newUser);
-        return newUser;
+        return this.userService.registerUser(user);
     }
 
 }
