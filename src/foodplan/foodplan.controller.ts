@@ -1,23 +1,26 @@
-import { Controller, Get } from '@nestjs/common';
-import { Foodplan } from './model/Foodplan';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Admin } from 'src/auth/decorators/admin.decorator';
+import { FoodPlanService } from './foodplan.service';
+import { FoodPlan } from './entities/foodplan.entity';
+import { CreateFoodPlanDTO } from './dtos/createFoodPlan.dto';
 
 @Controller('foodplan')
 export class FoodplanController {
 
-    private plans: Foodplan[] = [
-        {
-            description: 'Lulidan plan',
-            status: 'in-progress'
-        },
-        {
-            description: 'Otro plan',
-            status: 'closed'
-        }
-    ];
+    constructor(
+        private foodPlansService: FoodPlanService
+    ) {}
 
+    @Admin()
     @Get()
-    findAllPlans(): Foodplan[] {
-        return this.plans;
+    async findAllPlans(): Promise<FoodPlan[]> {
+        return this.foodPlansService.findAllPlans();
+    }
+
+    @Post()
+    async createPlan(@Body() plan: CreateFoodPlanDTO, @Req() request): Promise<FoodPlan> {
+        console.log(`user: ${JSON.stringify(request.user)}`);
+        return this.foodPlansService.createPlan(plan, request?.user);
     }
 
 }

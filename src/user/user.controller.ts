@@ -1,10 +1,11 @@
 import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
-import { CreateUserDTO } from 'src/user/dtos/CreateUser.dto';
+import { CreateUserDTO } from 'src/user/dtos/createUser.dto';
 import { UserService } from './user.service';
 import { UserNotFoundExceptionFilter } from './exceptionFilters/userNotFoundException.filter';
 import { User } from './entities/user.entity';
 import { UserAlreadyExistExceptionFilter } from './exceptionFilters/userAlreadyExistException.filter';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { Admin } from 'src/auth/decorators/admin.decorator';
 
 @Controller('user')
 @UseFilters(UserNotFoundExceptionFilter)
@@ -15,6 +16,7 @@ export class UserController {
      private userService: UserService
     ) {}
 
+    @Admin()
     @Get()
     async findAllUsers(): Promise<User[]> {
         return this.userService.findAllUsers();

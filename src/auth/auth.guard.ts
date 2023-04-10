@@ -9,6 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from './decorators/public.decorator';
+import { IS_ADMIN_KEY } from './decorators/admin.decorator';
   
   @Injectable()
   export class AuthGuard implements CanActivate {
@@ -24,6 +25,12 @@ import { IS_PUBLIC_KEY } from './decorators/public.decorator';
         context.getHandler(),
         context.getClass(),
       ]);
+
+      const isAdmin = this.reflector.getAllAndOverride<boolean>(IS_ADMIN_KEY, [
+        context.getHandler(),
+        context.getClass(),
+      ]);
+
       if (isPublic) {
         // 💡 See this condition
         return true;
@@ -44,6 +51,10 @@ import { IS_PUBLIC_KEY } from './decorators/public.decorator';
         // 💡 We're assigning the payload to the request object here
         // so that we can access it in our route handlers
         request['user'] = payload;
+
+        if (isAdmin && !payload.isAdmin) {
+          throw new UnauthorizedException();
+        }
       } catch {
         throw new UnauthorizedException();
       }

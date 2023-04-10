@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateUserDTO } from "./dtos/CreateUser.dto";
+import { CreateUserDTO } from "./dtos/createUser.dto";
 import { User } from "./entities/user.entity";
 import { UserNotFoundError } from "./errors/userNotFound.error";
 import { UserAlreadyExistingError } from "./errors/userAlreadyExisting.error";
