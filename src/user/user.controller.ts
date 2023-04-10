@@ -3,9 +3,11 @@ import { CreateUserDTO } from 'src/user/dtos/CreateUser.dto';
 import { UserService } from './user.service';
 import { UserNotFoundExceptionFilter } from './exceptionFilters/userNotFoundException.filter';
 import { User } from './entities/user.entity';
+import { UserAlreadyExistExceptionFilter } from './exceptionFilters/userAlreadyExistException.filter';
 
 @Controller('user')
 @UseFilters(UserNotFoundExceptionFilter)
+@UseFilters(UserAlreadyExistExceptionFilter)
 export class UserController {
 
     constructor(
