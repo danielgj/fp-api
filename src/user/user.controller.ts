@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { UserNotFoundExceptionFilter } from './exceptionFilters/userNotFoundException.filter';
 import { User } from './entities/user.entity';
 import { UserAlreadyExistExceptionFilter } from './exceptionFilters/userAlreadyExistException.filter';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('user')
 @UseFilters(UserNotFoundExceptionFilter)
@@ -24,6 +25,7 @@ export class UserController {
         return this.userService.findUserById(id);
     }
 
+    @Public()
     @Post()
     async registerUser(@Body() user: CreateUserDTO): Promise<User> {
         return this.userService.registerUser(user);

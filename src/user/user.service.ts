@@ -16,7 +16,10 @@ export class UserService {
 
     
     async findAllUsers(): Promise<User[]> {
-        return this.usersRepository.find();
+        return (await this.usersRepository.find()).map((item) => {
+            delete item.password
+            return item;
+        });
     }
 
     async findUserById(id: string):Promise<User> {
@@ -24,6 +27,7 @@ export class UserService {
         if (!user) {
             throw new UserNotFoundError(id);
         }
+        delete user.password;
         return user;
     }
     
