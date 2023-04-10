@@ -7,7 +7,10 @@ import { AuthenticationError } from './errors/authentication.error';
 @Injectable()
 export class AuthService {
     
-    constructor(private userService: UserService, private jwtService: JwtService) {}
+    constructor(
+      private userService: UserService, 
+      private jwtService: JwtService
+    ) {}
 
     async signIn(email: string, pass: string): Promise<any> {
       
@@ -31,13 +34,33 @@ export class AuthService {
           isAdmin: user.isAdmin
         }      
 
+        const token = await this.jwtService.signAsync(payload)
+
         return {
-          access_token: payload //this.jwtService.sign(payload)
+          access_token: token
         };
+
       } catch (e) {
-        console.log(`Dani: ${e}`)
+        console.log(`Error in auth service: ${e}`)
         throw new AuthenticationError();
       }
+    }
+
+    async validateUser(email: string, pass: string): Promise<any> {
+      
+      const user = await this.userService.findUserByEmail(email);
+
+      if (!user) {
+        return null;
+      }
+
+      const passwordValid = await bcrypt.compare(pass, user.password)
+
+      if (!passwordValid) {
+        throw new AuthenticationError();
+      }
+      
+      return user;
     }
 
 }
