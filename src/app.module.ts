@@ -19,8 +19,8 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true // Disable in prod
     }),
     UserModule,
-    FoodplanModule,
-    AuthModule
+    AuthModule,
+    FoodplanModule    
   ],
 })
 export class AppModule {}

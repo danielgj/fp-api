@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
 import { CreateUserDTO } from 'src/user/dtos/CreateUser.dto';
 import { UserService } from './user.service';
 import { UserNotFoundExceptionFilter } from './exceptionFilters/userNotFoundException.filter';
