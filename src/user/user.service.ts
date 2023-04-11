@@ -6,12 +6,14 @@ import { UserNotFoundError } from "./errors/userNotFound.error";
 import { UserAlreadyExistingError } from "./errors/userAlreadyExisting.error";
 import { Repository } from "typeorm";
 import * as bcrypt from 'bcrypt';
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UserService {
 
     constructor(
-        @InjectRepository(User)private readonly usersRepository: Repository<User>
+        @InjectRepository(User)private readonly usersRepository: Repository<User>, 
+        private jwtService: JwtService
     ) {}
 
     
@@ -33,18 +35,16 @@ export class UserService {
     
     async findUserByEmail(email: string):Promise<User> {
         const user = await this.usersRepository.findOneBy({email});
-        if (!user) {
-            throw new UserNotFoundError(email);
-        }
         return user;
     }
 
-    async registerUser(user: CreateUserDTO): Promise<User> {
+    async registerUser(user: CreateUserDTO): Promise<any> {
 
         const existingUser = await this.findUserByEmail(user.email);
         if (existingUser) {
             throw new UserAlreadyExistingError(user.email);
         }
+        
         const hashedPassword = await bcrypt.hash(user.password, +process.env.SALT_ROUNDS);
         var newUser = this.usersRepository.create({
             isPro: false,
@@ -54,8 +54,19 @@ export class UserService {
         });
         newUser.password = hashedPassword;
         await this.usersRepository.save(newUser);
-        delete newUser.password;
-        return newUser;
+
+        const payload = {
+            id: newUser.id,
+            email: newUser.email,
+            isPro: newUser.isPro,
+            isAdmin: newUser.isAdmin,            
+        }      
+  
+        const token = await this.jwtService.signAsync(payload)
+  
+        return {
+          access_token: token
+        };
     }
 
     async updateLastActiveAt(id: string): Promise<User> {

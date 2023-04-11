@@ -3,32 +3,13 @@ import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthenticationError } from './errors/authentication.error';
+import { UserMockData } from '../mock/user.mock';
 import * as bcrypt from 'bcrypt';
 
 describe('AuthService', () => {
   let authService: AuthService;
-
-  const userArray = [
-    {
-      id: '#1',
-      name: 'name #1',
-      email: '1@mail.com',
-      password: 'strongPass',
-      isPro: false,
-      isAdmin: false,
-    },
-    {
-        id: '#2',
-        name: 'name #2',
-        email: '2@mail.com',
-        password: 'strongPass',
-        isPro: false,
-        isAdmin: false,
-    },
-  ];
   
   const token = "validtoken";
-
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,11 +18,11 @@ describe('AuthService', () => {
         {
             provide: UserService,
             useValue: {
-              findAllUsers: jest.fn().mockResolvedValue(userArray),
-              findUserById: jest.fn().mockImplementation((id: string) => userArray.find((item) => item.id == id)),
-              findUserByEmail: jest.fn().mockImplementation((email: string) => userArray.find((item) => item.email == email)),
-              registerUser: jest.fn().mockResolvedValue(userArray[0]),
-              updateLastActiveAt: jest.fn().mockResolvedValue(userArray[0]),
+              findAllUsers: jest.fn().mockResolvedValue(UserMockData.users),
+              findUserById: jest.fn().mockImplementation((id: string) => UserMockData.users.find((item) => item.id == id)),
+              findUserByEmail: jest.fn().mockImplementation((email: string) => UserMockData.users.find((item) => item.email == email)),
+              registerUser: jest.fn().mockResolvedValue(UserMockData.users[0]),
+              updateLastActiveAt: jest.fn().mockResolvedValue(UserMockData.users[0]),
             },
         },
         {
@@ -67,12 +48,12 @@ describe('AuthService', () => {
   
   it('Sign In with wrong password throws error', async () => {
     jest.spyOn(bcrypt, 'compare').mockImplementation((pass1, pass2) => pass1 == pass2);
-    await expect(authService.signIn(userArray[0].email, "wrong")).rejects.toThrow(AuthenticationError);
+    await expect(authService.signIn(UserMockData.users[0].email, "wrong")).rejects.toThrow(AuthenticationError);
   });
 
   it('Sign In with valid credentials returns access token', async () => {
     jest.spyOn(bcrypt, 'compare').mockImplementation((pass1, pass2) => pass1 == pass2);
-    await expect(authService.signIn(userArray[0].email, userArray[0].password)).resolves.toEqual({
+    await expect(authService.signIn(UserMockData.users[0].email, UserMockData.users[0].password)).resolves.toEqual({
         access_token: token
     });
   });
@@ -84,11 +65,11 @@ describe('AuthService', () => {
 
   it('Validate with wrong password throws error', async () => {
     jest.spyOn(bcrypt, 'compare').mockImplementation((pass1, pass2) => pass1 == pass2);
-    await expect(authService.validateUser(userArray[0].email, "wrong")).rejects.toThrow(AuthenticationError);
+    await expect(authService.validateUser(UserMockData.users[0].email, "wrong")).rejects.toThrow(AuthenticationError);
   });
 
   it('Sign In with valid credentials returns user', async () => {
     jest.spyOn(bcrypt, 'compare').mockImplementation((pass1, pass2) => pass1 == pass2);
-    await expect(authService.validateUser(userArray[0].email, userArray[0].password)).resolves.toEqual(userArray[0]);
+    await expect(authService.validateUser(UserMockData.users[0].email, UserMockData.users[0].password)).resolves.toEqual(UserMockData.users[0]);
   });
 });

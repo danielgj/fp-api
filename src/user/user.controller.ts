@@ -29,7 +29,7 @@ export class UserController {
 
     @Public()
     @Post()
-    async registerUser(@Body() user: CreateUserDTO): Promise<User> {
+    async registerUser(@Body() user: CreateUserDTO): Promise<any> {
         return this.userService.registerUser(user);
     }
 
