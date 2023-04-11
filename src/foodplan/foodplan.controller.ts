@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
-import { Admin } from 'src/auth/decorators/admin.decorator';
+import { Admin } from '../auth/decorators/admin.decorator';
 import { FoodPlanService } from './foodplan.service';
 import { FoodPlan } from './entities/foodplan.entity';
 import { CreateFoodPlanDTO } from './dtos/createFoodPlan.dto';

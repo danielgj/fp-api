@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 import { FoodPlan } from "./entities/foodplan.entity";
 import { PlanNotFoundError } from "./errors/planNotFound.error";
 import { CreateFoodPlanDTO } from "./dtos/createFoodPlan.dto";
-import { User } from "src/user/entities/user.entity";
+import { User } from "../user/entities/user.entity";
 
 @Injectable()
 export class FoodPlanService {

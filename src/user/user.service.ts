@@ -49,11 +49,19 @@ export class UserService {
         var newUser = this.usersRepository.create({
             isPro: false,
             isAdmin: false,
+            lastActiveAt: new Date().toISOString(),
             ...user
         });
         newUser.password = hashedPassword;
         await this.usersRepository.save(newUser);
         delete newUser.password;
         return newUser;
+    }
+
+    async updateLastActiveAt(id: string): Promise<User> {
+        const userToUpdate = await this.findUserById(id);
+        userToUpdate.lastActiveAt = new Date().toISOString();
+        await this.usersRepository.save(userToUpdate);
+        return userToUpdate;
     }
 }

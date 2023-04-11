@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from "@nestjs/common";
 import { Response } from 'express';
-import { UserNotFoundError } from "src/user/errors/userNotFound.error";
+import { UserNotFoundError } from "../errors/userNotFound.error";
 
 @Catch(UserNotFoundError)
 export class UserNotFoundExceptionFilter implements ExceptionFilter {

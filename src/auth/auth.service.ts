@@ -34,7 +34,9 @@ export class AuthService {
           isAdmin: user.isAdmin
         }      
 
+        await this.userService.updateLastActiveAt(user.id);
         const token = await this.jwtService.signAsync(payload)
+
 
         return {
           access_token: token

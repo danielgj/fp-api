@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
-import { CreateUserDTO } from 'src/user/dtos/createUser.dto';
+import { CreateUserDTO } from './dtos/createUser.dto';
 import { UserService } from './user.service';
 import { UserNotFoundExceptionFilter } from './exceptionFilters/userNotFoundException.filter';
 import { User } from './entities/user.entity';
 import { UserAlreadyExistExceptionFilter } from './exceptionFilters/userAlreadyExistException.filter';
-import { Public } from 'src/auth/decorators/public.decorator';
-import { Admin } from 'src/auth/decorators/admin.decorator';
+import { Public } from '../auth/decorators/public.decorator';
+import { Admin } from '../auth/decorators/admin.decorator';
 
 @Controller('user')
 @UseFilters(UserNotFoundExceptionFilter)

@@ -11,7 +11,7 @@ export class User {
     @Column('text')
     password: string;
     @Column({
-        type: 'text',
+        type: 'timestamp',
         nullable: true
     })
     lastActiveAt?: string;

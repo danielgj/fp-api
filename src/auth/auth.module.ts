@@ -18,7 +18,8 @@ import { AuthGuard } from './auth.guard';
           expiresIn: configService.get<string>('JWT_EXPIRES_IN'),
         },
       })
-    }),UserModule,   
+    }),
+    UserModule,   
   ],
   controllers: [AuthController],
   providers: [
