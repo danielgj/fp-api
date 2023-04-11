@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateUserDTO } from "./dtos/createUser.dto";
-import { User } from "./entities/user.entity";
-import { UserNotFoundError } from "./errors/userNotFound.error";
-import { UserAlreadyExistingError } from "./errors/userAlreadyExisting.error";
+import { CreateUserDTO } from "../user/dtos/createUser.dto";
+import { User } from "../user/entities/user.entity";
+import { UserNotFoundError } from "../user/errors/userNotFound.error";
+import { UserAlreadyExistingError } from "../user/errors/userAlreadyExisting.error";
 import { Repository } from "typeorm";
 import * as bcrypt from 'bcrypt';
 
