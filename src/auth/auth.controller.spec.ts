@@ -1,38 +1,68 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UserModule } from '../user/user.module';
-import { JwtModule } from '@nestjs/jwt';
+import { AuthenticationError } from './errors/authentication.error';
 
 describe('AuthController', () => {
   let authController: AuthController;
-  let authService: AuthService;
+
+  const mockedSignInResponse = {
+    access_token: "foo"
+  };
+
+  const wrongBody = {
+    email: "wrong@mail.com",
+    password: "foo"
+  };
+
+  const validBody = {
+    email: "valid@mail.com",
+    password: "foo"
+  };
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [
-        UserModule,
-        JwtModule
-      ],
+      imports: [],
       controllers: [AuthController],
-      providers: [AuthService]
+      providers: [
+        {
+            provide: AuthService,
+            useValue: {
+                signIn: jest.fn().mockImplementation((email: string, pass: string) => {
+                    if (email == validBody.email) {
+                        return Promise.resolve(mockedSignInResponse);
+                    } else {
+                        return Promise.reject(new AuthenticationError());
+                    }                    
+                }),
+                validateUser: jest.fn().mockImplementation((email: string, pass: string) =>
+                    Promise.resolve({
+                        id: "foo",
+                        name: "dani",
+                        email: "d@d.es",
+                        password: "secret",
+                        isPro: false,
+                        isAdmin: false
+                    }),
+                ),
+            }
+        }        
+      ]
     }).compile();
 
     authController = moduleRef.get<AuthController>(AuthController);
-    authService = moduleRef.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {
     expect(authController).toBeDefined();
   });
 
-  /*
-  it('Should throw an error if body is wrong', () => {
-    const wrongBody = {
-        email: "",
-        password: ""
-    };
-    expect(authController.signIn(wrongBody)).toThrowError()
-  })
-  */
+  it('Should throw an error if body is wrong', async () => {
+    await expect(authController.signIn(wrongBody)).rejects.toThrow(AuthenticationError)
+  });
+
+  it('Returns access token if body is valid', async () => {
+    await expect(authController.signIn(validBody)).resolves.toEqual(mockedSignInResponse);
+  });
+
 });

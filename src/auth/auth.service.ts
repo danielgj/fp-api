@@ -13,7 +13,7 @@ export class AuthService {
     ) {}
 
     async signIn(email: string, pass: string): Promise<any> {
-      
+
       try {
         const user = await this.userService.findUserByEmail(email);
 
@@ -22,7 +22,7 @@ export class AuthService {
         }
 
         const passwordValid = await bcrypt.compare(pass, user.password)
-
+        
         if (!passwordValid) {
           throw new AuthenticationError();
         }
@@ -36,7 +36,6 @@ export class AuthService {
 
         await this.userService.updateLastActiveAt(user.id);
         const token = await this.jwtService.signAsync(payload)
-
 
         return {
           access_token: token
