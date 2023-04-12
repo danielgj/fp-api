@@ -4,6 +4,7 @@
 
 #DB
 postgres/
+.postgres-data/
 
 # Logs
 logs

@@ -35,6 +35,9 @@ export class UserService {
     
     async findUserByEmail(email: string):Promise<User> {
         const user = await this.usersRepository.findOneBy({email});
+        if (user) {
+            delete user.password;
+        }        
         return user;
     }
 
@@ -44,7 +47,6 @@ export class UserService {
         if (existingUser) {
             throw new UserAlreadyExistingError(user.email);
         }
-        
         const hashedPassword = await bcrypt.hash(user.password, +process.env.SALT_ROUNDS);
         var newUser = this.usersRepository.create({
             isPro: false,
