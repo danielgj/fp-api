@@ -19,7 +19,6 @@ export class FoodplanController {
 
     @Post()
     async createPlan(@Body() plan: CreateFoodPlanDTO, @Req() request): Promise<FoodPlan> {
-        console.log(`user: ${JSON.stringify(request.user)}`);
         return this.foodPlansService.createPlan(plan, request?.user);
     }
 
