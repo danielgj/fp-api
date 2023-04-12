@@ -5,7 +5,7 @@ import { User } from "./entities/user.entity";
 import { UserNotFoundError } from "./errors/userNotFound.error";
 import { UserAlreadyExistingError } from "./errors/userAlreadyExisting.error";
 import { Repository } from "typeorm";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
@@ -35,9 +35,6 @@ export class UserService {
     
     async findUserByEmail(email: string):Promise<User> {
         const user = await this.usersRepository.findOneBy({email});
-        if (user) {
-            delete user.password;
-        }        
         return user;
     }
 
