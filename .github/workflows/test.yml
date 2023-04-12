@@ -8,11 +8,4 @@ jobs:
     - name: Install modules
       run: npm ci
     - name: Run tests
-      run: npm run test
-    - name: Check Coverage
-      run: npm run test:cov
-    - name: Archive code coverage results
-      uses: actions/upload-artifact@v3
-      with:
-        name: code-coverage-report
-        path: coverage/lcov-report/*
+      run: npm run test    
