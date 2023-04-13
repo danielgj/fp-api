@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { AuthenticationError } from './errors/authentication.error';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class AuthService {
           throw new AuthenticationError();
         }
 
-        const passwordValid = await bcrypt.compare(pass, user.password)
+        const passwordValid = await bcrypt.compare(pass, user.password);
         
         if (!passwordValid) {
           throw new AuthenticationError();

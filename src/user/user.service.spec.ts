@@ -5,7 +5,7 @@ import { UserMockData } from '../mock/user.mock';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { CreateUserDTO } from './dtos/createUser.dto';
 import { UserAlreadyExistingError } from './errors/userAlreadyExisting.error';
 
