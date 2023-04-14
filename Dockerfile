@@ -19,4 +19,8 @@ COPY --from=development /usr/src/app/dist ./dist
 
 CMD ["node", "dist/main"]
 
+# docker build -t danielgj78/fp-api .
+# docker push danielgj78/fp-api
+
+
 
