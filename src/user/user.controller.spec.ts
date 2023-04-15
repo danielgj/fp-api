@@ -3,7 +3,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { UserMockData } from '../mock/user.mock';
 import { UserNotFoundError } from './errors/userNotFound.error';
-import { CreateUserDTO } from './dtos/createUser.dto';
+import { CreateUserDTO } from './dtos/create-user.dto';
 import { UserAlreadyExistingError } from './errors/userAlreadyExisting.error';
 
 describe('UserController', () => {

@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
-import { CreateUserDTO } from './dtos/createUser.dto';
+import { CreateUserDTO } from './dtos/create-user.dto';
 import { UserService } from './user.service';
 import { UserNotFoundExceptionFilter } from './exceptionFilters/userNotFoundException.filter';
 import { User } from './entities/user.entity';

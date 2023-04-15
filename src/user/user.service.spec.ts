@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
-import { CreateUserDTO } from './dtos/createUser.dto';
+import { CreateUserDTO } from './dtos/create-user.dto';
 import { UserAlreadyExistingError } from './errors/userAlreadyExisting.error';
 
 describe('UserService', () => {
