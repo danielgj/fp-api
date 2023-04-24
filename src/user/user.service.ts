@@ -1,29 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { User } from './entities/user.entity';
 import { UserNotFoundError } from './errors/userNotFound.error';
 import { UserAlreadyExistingError } from './errors/userAlreadyExisting.error';
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import {
+  USER_REPOSITORY_TOKEN,
+  UserRepository,
+} from './repositories/users.repository.interface';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    @Inject(USER_REPOSITORY_TOKEN)
+    private usersRepository: UserRepository,
     private jwtService: JwtService,
   ) {}
 
   async findAllUsers(): Promise<User[]> {
-    return (await this.usersRepository.find()).map((item) => {
+    return (await this.usersRepository.findAll()).map((item) => {
       delete item.password;
       return item;
     });
   }
 
   async findUserById(id: string): Promise<User> {
-    const user = await this.usersRepository.findOneBy({ id });
+    const user = await this.usersRepository.findBy({ id });
     if (!user) {
       throw new UserNotFoundError(id);
     }
@@ -32,7 +35,7 @@ export class UserService {
   }
 
   async findUserByEmail(email: string): Promise<User> {
-    const user = await this.usersRepository.findOneBy({ email });
+    const user = await this.usersRepository.findBy({ email });
     return user;
   }
 
@@ -45,14 +48,14 @@ export class UserService {
       user.password,
       +process.env.SALT_ROUNDS,
     );
-    const newUser = this.usersRepository.create({
+    const createUserDto = {
       isPro: false,
       isAdmin: false,
       lastActiveAt: new Date().toISOString(),
+      password: hashedPassword,
       ...user,
-    });
-    newUser.password = hashedPassword;
-    await this.usersRepository.save(newUser);
+    };
+    const newUser = await this.usersRepository.create(createUserDto);
 
     const payload = {
       id: newUser.id,
@@ -71,7 +74,7 @@ export class UserService {
   async updateLastActiveAt(id: string): Promise<User> {
     const userToUpdate = await this.findUserById(id);
     userToUpdate.lastActiveAt = new Date().toISOString();
-    await this.usersRepository.save(userToUpdate);
+    await this.usersRepository.update(userToUpdate);
     return userToUpdate;
   }
 }

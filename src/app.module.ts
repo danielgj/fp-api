@@ -4,6 +4,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { User } from './user/model/user.model';
 
 @Module({
   imports: [
@@ -17,8 +18,9 @@ import { AuthModule } from './auth/auth.module';
       database: process.env.DB_NAME,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
+      entities: [User],
       autoLoadEntities: true,
-      synchronize: true // Disable in prod
+      synchronize: true, // Disable in prod
     }),
     UserModule,
     AuthModule,
