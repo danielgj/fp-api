@@ -1,8 +1,8 @@
 {
   "name": "fp-api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Food Planner API",
+  "author": "danielgj@gmail.com",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -82,5 +82,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "engines": {
+    "node": "18.15.0"
   }
 }
