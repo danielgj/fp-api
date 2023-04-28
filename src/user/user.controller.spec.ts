@@ -10,7 +10,7 @@ describe('UserController', () => {
   let userController: UserController;
 
   const mockedSignInResponse = {
-    access_token: "foo"
+    access_token: 'foo',
   };
 
   beforeEach(async () => {
@@ -19,34 +19,40 @@ describe('UserController', () => {
       controllers: [UserController],
       providers: [
         {
-            provide: UserService,
-            useValue: {
-              findAllUsers: jest.fn().mockResolvedValue(UserMockData.users),
-              findUserById: jest.fn().mockImplementation((id: string) => {
-                const user = UserMockData.users.find((item) => item.id == id);
-                if (!user) {
-                    throw new UserNotFoundError(id);
-                }
-                return user;
-              }),
-              findUserByEmail: jest.fn().mockImplementation((email: string) => {
-                const user = UserMockData.users.find((item) => item.id == email);
-                if (!user) {
-                    throw new UserNotFoundError(email);
-                }
-                return user;
-              }),
-              registerUser: jest.fn().mockImplementation((user: CreateUserDTO) => {
-                const existingUser = UserMockData.users.find((item) => item.email == user.email);
+          provide: UserService,
+          useValue: {
+            findAllUsers: jest.fn().mockResolvedValue(UserMockData.users),
+            findUserById: jest.fn().mockImplementation((id: string) => {
+              const user = UserMockData.users.find((item) => item.id == id);
+              if (!user) {
+                throw new UserNotFoundError(id);
+              }
+              return user;
+            }),
+            findUserByEmail: jest.fn().mockImplementation((email: string) => {
+              const user = UserMockData.users.find((item) => item.id == email);
+              if (!user) {
+                throw new UserNotFoundError(email);
+              }
+              return user;
+            }),
+            registerUser: jest
+              .fn()
+              .mockImplementation((user: CreateUserDTO) => {
+                const existingUser = UserMockData.users.find(
+                  (item) => item.email == user.email,
+                );
                 if (existingUser) {
-                    throw new UserAlreadyExistingError(user.email);
+                  throw new UserAlreadyExistingError(user.email);
                 }
                 return mockedSignInResponse;
               }),
-              updateLastActiveAt: jest.fn().mockResolvedValue(UserMockData.users[0]),
-            }
-        }        
-      ]
+            updateLastActiveAt: jest
+              .fn()
+              .mockResolvedValue(UserMockData.users[0]),
+          },
+        },
+      ],
     }).compile();
 
     userController = moduleRef.get<UserController>(UserController);
@@ -57,31 +63,40 @@ describe('UserController', () => {
   });
 
   it('findAllUsers retrieves all users', async () => {
-    await expect(userController.findAllUsers()).resolves.toEqual(UserMockData.users);
+    await expect(userController.findAllUsers()).resolves.toEqual(
+      UserMockData.users,
+    );
   });
 
   it('findUserById with valid id retrieves expected users', async () => {
-    await expect(userController.findUserById(UserMockData.users[0].id)).resolves.toEqual(UserMockData.users[0]);
+    await expect(
+      userController.findUserById(UserMockData.users[0].id),
+    ).resolves.toEqual(UserMockData.users[0]);
   });
 
   it('findUserById with invalid id throws error', async () => {
-    await expect(userController.findUserById('wrong')).rejects.toThrow(UserNotFoundError);
+    await expect(userController.findUserById('wrong')).rejects.toThrow(
+      UserNotFoundError,
+    );
   });
 
   it('Register user with existing email throws error', async () => {
-    await expect(userController.registerUser({
+    await expect(
+      userController.registerUser({
         name: UserMockData.users[0].name,
         email: UserMockData.users[0].email,
-        password: 'foo'
-    })).rejects.toThrow(UserAlreadyExistingError);
+        password: 'foo',
+      }),
+    ).rejects.toThrow(UserAlreadyExistingError);
   });
 
   it('Register user with non existing email returns token', async () => {
-    await expect(userController.registerUser({
+    await expect(
+      userController.registerUser({
         name: UserMockData.users[0].name,
         email: 'new@mail.com',
-        password: 'foo'
-    })).resolves.toEqual(mockedSignInResponse);
+        password: 'foo',
+      }),
+    ).resolves.toEqual(mockedSignInResponse);
   });
-
 });

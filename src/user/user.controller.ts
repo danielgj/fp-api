@@ -11,26 +11,22 @@ import { Admin } from '../auth/decorators/admin.decorator';
 @UseFilters(UserNotFoundExceptionFilter)
 @UseFilters(UserAlreadyExistExceptionFilter)
 export class UserController {
+  constructor(private userService: UserService) {}
 
-    constructor(
-     private userService: UserService
-    ) {}
+  @Admin()
+  @Get()
+  async findAllUsers(): Promise<User[]> {
+    return this.userService.findAllUsers();
+  }
 
-    @Admin()
-    @Get()
-    async findAllUsers(): Promise<User[]> {
-        return this.userService.findAllUsers();
-    }
+  @Get(':id')
+  async findUserById(@Param('id') id: string): Promise<User> {
+    return this.userService.findUserById(id);
+  }
 
-    @Get(':id')
-    async findUserById(@Param('id') id: string): Promise<User> {
-        return this.userService.findUserById(id);
-    }
-
-    @Public()
-    @Post()
-    async registerUser(@Body() user: CreateUserDTO): Promise<any> {
-        return this.userService.registerUser(user);
-    }
-
+  @Public()
+  @Post()
+  async registerUser(@Body() user: CreateUserDTO): Promise<any> {
+    return this.userService.registerUser(user);
+  }
 }

@@ -6,20 +6,19 @@ import { CreateFoodPlanDTO } from './dtos/createFoodPlan.dto';
 
 @Controller('foodplan')
 export class FoodplanController {
+  constructor(private foodPlansService: FoodPlanService) {}
 
-    constructor(
-        private foodPlansService: FoodPlanService
-    ) {}
+  @Admin()
+  @Get()
+  async findAllPlans(): Promise<FoodPlan[]> {
+    return this.foodPlansService.findAllPlans();
+  }
 
-    @Admin()
-    @Get()
-    async findAllPlans(): Promise<FoodPlan[]> {
-        return this.foodPlansService.findAllPlans();
-    }
-
-    @Post()
-    async createPlan(@Body() plan: CreateFoodPlanDTO, @Req() request): Promise<FoodPlan> {
-        return this.foodPlansService.createPlan(plan, request?.user);
-    }
-
+  @Post()
+  async createPlan(
+    @Body() plan: CreateFoodPlanDTO,
+    @Req() request,
+  ): Promise<FoodPlan> {
+    return this.foodPlansService.createPlan(plan, request?.user);
+  }
 }
