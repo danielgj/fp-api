@@ -4,6 +4,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -18,8 +19,9 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       autoLoadEntities: true,
-      synchronize: true // Disable in prod
+      synchronize: process.env.SYNCHRONIZE === 'true',
     }),
+    HomeModule,
     UserModule,
     AuthModule,
     FoodplanModule,
