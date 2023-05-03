@@ -7,17 +7,17 @@ describe('AuthController', () => {
   let authController: AuthController;
 
   const mockedSignInResponse = {
-    access_token: "foo"
+    access_token: 'foo',
   };
 
   const wrongBody = {
-    email: "wrong@mail.com",
-    password: "foo"
+    email: 'wrong@mail.com',
+    password: 'foo',
   };
 
   const validBody = {
-    email: "valid@mail.com",
-    password: "foo"
+    email: 'valid@mail.com',
+    password: 'foo',
   };
 
   beforeEach(async () => {
@@ -26,28 +26,32 @@ describe('AuthController', () => {
       controllers: [AuthController],
       providers: [
         {
-            provide: AuthService,
-            useValue: {
-                signIn: jest.fn().mockImplementation((email: string, pass: string) => {
-                    if (email == validBody.email) {
-                        return Promise.resolve(mockedSignInResponse);
-                    } else {
-                        return Promise.reject(new AuthenticationError());
-                    }                    
+          provide: AuthService,
+          useValue: {
+            signIn: jest
+              .fn()
+              .mockImplementation((email: string, pass: string) => {
+                if (email == validBody.email) {
+                  return Promise.resolve(mockedSignInResponse);
+                } else {
+                  return Promise.reject(new AuthenticationError());
+                }
+              }),
+            validateUser: jest
+              .fn()
+              .mockImplementation((email: string, pass: string) =>
+                Promise.resolve({
+                  id: 'foo',
+                  name: 'dani',
+                  email: 'd@d.es',
+                  password: 'secret',
+                  isPro: false,
+                  isAdmin: false,
                 }),
-                validateUser: jest.fn().mockImplementation((email: string, pass: string) =>
-                    Promise.resolve({
-                        id: "foo",
-                        name: "dani",
-                        email: "d@d.es",
-                        password: "secret",
-                        isPro: false,
-                        isAdmin: false
-                    }),
-                ),
-            }
-        }        
-      ]
+              ),
+          },
+        },
+      ],
     }).compile();
 
     authController = moduleRef.get<AuthController>(AuthController);
@@ -58,11 +62,14 @@ describe('AuthController', () => {
   });
 
   it('Should throw an error if body is wrong', async () => {
-    await expect(authController.signIn(wrongBody)).rejects.toThrow(AuthenticationError)
+    await expect(authController.signIn(wrongBody)).rejects.toThrow(
+      AuthenticationError,
+    );
   });
 
   it('Returns access token if body is valid', async () => {
-    await expect(authController.signIn(validBody)).resolves.toEqual(mockedSignInResponse);
+    await expect(authController.signIn(validBody)).resolves.toEqual(
+      mockedSignInResponse,
+    );
   });
-
 });

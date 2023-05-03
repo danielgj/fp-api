@@ -10,16 +10,16 @@ import { AuthGuard } from './auth.guard';
 @Module({
   imports: [
     JwtModule.registerAsync({
-      imports: [ ConfigModule ],
-      inject: [ ConfigService, ],
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
           expiresIn: configService.get<string>('JWT_EXPIRES_IN'),
         },
-      })
+      }),
     }),
-    UserModule,   
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -27,7 +27,7 @@ import { AuthGuard } from './auth.guard';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    AuthService
+    AuthService,
   ],
   exports: [AuthService],
 })

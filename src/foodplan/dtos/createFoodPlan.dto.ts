@@ -1,6 +1,8 @@
-import { IsDate, IsEmail, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class CreateFoodPlanDTO {
-    @IsString()
-    name: string;
+  @ApiProperty()
+  @IsString()
+  name: string;
 }

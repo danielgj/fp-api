@@ -11,11 +11,11 @@ describe('FoodplanController', () => {
 
   const req = {
     user: {
-        id: '#user1'
-    }
+      id: '#user1',
+    },
   };
   const createPlanDTO: CreateFoodPlanDTO = {
-    name: "test",        
+    name: 'test',
   };
 
   beforeEach(async () => {
@@ -24,27 +24,29 @@ describe('FoodplanController', () => {
       controllers: [FoodplanController],
       providers: [
         {
-            provide: FoodPlanService,
-            useValue: {
-              findAllPlans: jest.fn().mockResolvedValue(FoodPlanMockData.plans),
-              findPlanById: jest.fn().mockImplementation((id: string) => {
-                const plan = FoodPlanMockData.plans.find((item) => item.id == id);
-                if (!plan) {
-                    throw new PlanNotFoundError(id);
-                }
-                return plan;
-              }),
-              createPlan: jest.fn().mockImplementation((plan: CreateFoodPlanDTO, user: User) => {
+          provide: FoodPlanService,
+          useValue: {
+            findAllPlans: jest.fn().mockResolvedValue(FoodPlanMockData.plans),
+            findPlanById: jest.fn().mockImplementation((id: string) => {
+              const plan = FoodPlanMockData.plans.find((item) => item.id == id);
+              if (!plan) {
+                throw new PlanNotFoundError(id);
+              }
+              return plan;
+            }),
+            createPlan: jest
+              .fn()
+              .mockImplementation((plan: CreateFoodPlanDTO, user: User) => {
                 return {
-                    owner: user.id,
-                    name: plan.name,
-                    isActive: true,
-                    createdAt: new Date().toISOString()
+                  owner: user.id,
+                  name: plan.name,
+                  isActive: true,
+                  createdAt: new Date().toISOString(),
                 };
               }),
-            }
-        }        
-      ]
+          },
+        },
+      ],
     }).compile();
 
     foodplanController = moduleRef.get<FoodplanController>(FoodplanController);
@@ -55,17 +57,19 @@ describe('FoodplanController', () => {
   });
 
   it('Find all retrieves all plans', async () => {
-    await expect(foodplanController.findAllPlans()).resolves.toBe(FoodPlanMockData.plans);
-
+    await expect(foodplanController.findAllPlans()).resolves.toBe(
+      FoodPlanMockData.plans,
+    );
   });
 
   it('Create plan returns data', async () => {
-    await expect(foodplanController.createPlan(createPlanDTO, req)).resolves.toBeDefined();
+    await expect(
+      foodplanController.createPlan(createPlanDTO, req),
+    ).resolves.toBeDefined();
   });
 
   it('Create plan assigng owner', async () => {
     const out = await foodplanController.createPlan(createPlanDTO, req);
     expect(out.owner).toBe(req.user.id);
   });
-
 });
