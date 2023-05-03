@@ -3,7 +3,9 @@ import { Admin } from '../auth/decorators/admin.decorator';
 import { FoodPlanService } from './foodplan.service';
 import { FoodPlan } from './entities/foodplan.entity';
 import { CreateFoodPlanDTO } from './dtos/createFoodPlan.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('foodplan')
 @Controller('foodplan')
 export class FoodplanController {
   constructor(private foodPlansService: FoodPlanService) {}
